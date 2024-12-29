@@ -8,3 +8,19 @@ spring:
       authentication-database: admin
       username: ${DB_SERVER_USERNAME}
       password: ${DB_SERVER_PASSWORD}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}:9092
+    consumer:
+      group-id: test-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      max-poll-records: 500
+      auto-commit-interval: 1000
+    producer:
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    listener:
+      ack-mode: manual
+      concurrency: 3
