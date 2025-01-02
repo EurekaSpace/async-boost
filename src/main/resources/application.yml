@@ -25,3 +25,7 @@ spring:
     listener:
       ack-mode: manual
       concurrency: 3
+
+  rsocket:
+    server:
+      port: 7000
