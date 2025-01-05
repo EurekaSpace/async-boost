@@ -2,14 +2,12 @@ package io.anan.eurekaspace.async_boost.adapter.`in`.ws
 
 import io.anan.eurekaspace.async_boost.application.port.`in`.ChatUseCase
 import io.anan.eurekaspace.async_boost.domain.model.ChatMessageModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.slf4j.LoggerFactory
-import org.springframework.messaging.MessageHeaders
-import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
-import org.springframework.messaging.simp.user.SimpSession
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
 
 @Controller
 class ChatController(
@@ -24,5 +22,28 @@ class ChatController(
         log.info("Received message >>>>>>>>>>>>>>>>>>>>>>>>>>>  $chat")
 
         chatUseCase.sendMessage(chat)
+    }
+
+    // Request-Response (1:1 요청-응답)
+    @MessageMapping("request-response")
+    suspend fun requestResponse(message: String): String {
+        println("request-response Message $message")
+        return "Echo: $message"
+    }
+
+    // Fire-and-Forget (단방향 전송)
+    @MessageMapping("fire-and-forget")
+    suspend fun fireAndForget(message: String) {
+        println("Fire-and-Forget Received: $message")
+    }
+
+    // Request-Stream (스트림 전송)
+    @MessageMapping("request-stream")
+    fun requestStream(message: String): Flow<String> = flow {
+        repeat(5) {
+            emit("Stream Message $it: $message")
+            println("Stream Message $it: $message")
+            delay(1000)
+        }
     }
 }

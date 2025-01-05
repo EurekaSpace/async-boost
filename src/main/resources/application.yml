@@ -28,4 +28,5 @@ spring:
 
   rsocket:
     server:
-      port: 7000
+      transport: websocket
+      mapping-path: /rsocket
