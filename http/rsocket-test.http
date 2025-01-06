@@ -1,9 +1,0 @@
-RSOCKET message
-Host: ws://localhost:7000
-Content-Type: application/json
-
-{
-    "message": "Hello, RSocket!",
-    "sender": "RSocket",
-    "roomId": "d31d3f4"
-}

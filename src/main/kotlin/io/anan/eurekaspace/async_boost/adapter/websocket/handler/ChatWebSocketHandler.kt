@@ -1,8 +1,8 @@
 package io.anan.eurekaspace.async_boost.adapter.websocket.handler
 
+import io.anan.eurekaspace.async_boost.application.port.usecase.SendChatMessageUseCase
 import io.anan.eurekaspace.async_boost.domain.model.ChatMessage
 import io.anan.eurekaspace.async_boost.infra.messaging.ChatKafkaConsumer
-import io.anan.eurekaspace.async_boost.infra.messaging.ChatKafkaProducer
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.socket.WebSocketHandler
@@ -11,8 +11,8 @@ import reactor.core.publisher.Mono
 
 @Component
 class ChatWebSocketHandler(
-        private val chatKafkaProducer: ChatKafkaProducer,
-        private val chatKafkaConsumer: ChatKafkaConsumer
+        private val sendChatMessageUseCase: SendChatMessageUseCase,
+        private val chatKafkaConsumer: ChatKafkaConsumer,
 ) : WebSocketHandler {
     override fun handle(session: WebSocketSession): Mono<Void> {
         val roomId = session.handshakeInfo.uri.path.split("/").last()
@@ -27,7 +27,7 @@ class ChatWebSocketHandler(
                             message = message
                     )
                     runBlocking {
-                        chatKafkaProducer.publishMessage(chatMessage)
+                        sendChatMessageUseCase.execute(chatMessage)
                     }
                 }
 

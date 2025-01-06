@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class SendChatMessageUseCase(
-        private val chatMessageQueue: ChatMessageMQPort,
+        private val chatMessageMQPort: ChatMessageMQPort,
         private val chatMessageRepository: ChatMessageRepository
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
     suspend fun execute(message: ChatMessage) {
         log.info("Sending message >>>>>>>>>>>>>>>>>>>>>>>>>>!!>  $message")
-        val savedMessage = chatMessageRepository.save(message)
-        chatMessageQueue.publishMessage(savedMessage)
+//        val savedMessage = chatMessageRepository.save(message)
+        chatMessageMQPort.publishMessage(message)
     }
 }

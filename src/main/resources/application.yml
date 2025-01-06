@@ -16,14 +16,17 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
       max-poll-records: 500
-      auto-commit-interval: 1000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
     producer:
       bootstrap-servers: ${KAFKA_SERVER}
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       retries: 3
-      batch-size: 16384
+      batch-size: 0 # 즉시 전송
     listener:
       ack-mode: manual
-      concurrency: 3
+      concurrency: 3 # 병렬 처리 가능
