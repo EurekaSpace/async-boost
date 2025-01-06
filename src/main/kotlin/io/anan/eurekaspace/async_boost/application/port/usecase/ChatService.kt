@@ -1,4 +1,4 @@
-package io.anan.eurekaspace.async_boost.application.port.`in`
+package io.anan.eurekaspace.async_boost.application.port.usecase
 
 import io.anan.eurekaspace.async_boost.application.port.out.mq.ChatMqPort
 import io.anan.eurekaspace.async_boost.application.port.out.persist.ChatPersistPort
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class ChatUseCase(
+class ChatService(
         private val chatMqPort: ChatMqPort,
         private val chatPersistPort: ChatPersistPort
 ) {

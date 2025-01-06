@@ -1,7 +1,6 @@
 package io.anan.eurekaspace.async_boost.adapter.`in`.mq.kafka.consumer
 
-import io.anan.eurekaspace.async_boost.application.port.`in`.ChatUseCase
-import io.anan.eurekaspace.async_boost.domain.model.ChatMessageModel
+import io.anan.eurekaspace.async_boost.application.port.usecase.ChatService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.annotation.KafkaListener
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Component
 @KafkaListener(topics = ["chat"])
 class ChatKafkaConsumer {
     @Autowired
-    private lateinit var chatUseCase: ChatUseCase
+    private lateinit var chatUseCase: ChatService
 
     private val log = LoggerFactory.getLogger(this::class.java)
 

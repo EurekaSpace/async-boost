@@ -1,6 +1,6 @@
 package io.anan.eurekaspace.async_boost.adapter.`in`.ws
 
-import io.anan.eurekaspace.async_boost.application.port.`in`.ChatUseCase
+import io.anan.eurekaspace.async_boost.application.port.usecase.ChatService
 import io.anan.eurekaspace.async_boost.domain.model.ChatMessageModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class ChatController(
-        private val chatUseCase: ChatUseCase
+        private val chatUseCase: ChatService
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
