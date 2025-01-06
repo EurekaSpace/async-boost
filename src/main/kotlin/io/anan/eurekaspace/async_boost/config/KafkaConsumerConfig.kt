@@ -1,4 +1,4 @@
-package io.anan.eurekaspace.async_boost.infra.config
+package io.anan.eurekaspace.async_boost.config
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
