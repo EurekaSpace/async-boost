@@ -14,6 +14,6 @@ class KafkaProducer(private val kafkaTemplate: KafkaTemplate<String, String>) : 
                 "chat-messages",
                 chatMessage.roomId,
                 ObjectMapper().writeValueAsString(chatMessage)
-        )
+        ).get()
     }
 }
