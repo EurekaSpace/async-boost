@@ -13,6 +13,5 @@ class KafkaConfig {
         return ObjectMapper()
                 .registerModule(JavaTimeModule()) // 시간 직렬화 모듈 추가
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // ISO-8601 형식 사용
-
     }
 }

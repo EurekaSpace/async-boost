@@ -14,8 +14,8 @@ class SendChatMessageUseCase(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     suspend fun execute(message: ChatMessage) {
-        log.info("Sending message >>>>>>>>>>>>>>>>>>>>>>>>>>!!>  $message")
-//        val savedMessage = chatMessageRepository.save(message)
-        chatMessageMQPort.publishMessage(message)
+        val savedMessage = chatMessageRepository.save(message)
+        log.info("saved message >>>  $savedMessage")
+        chatMessageMQPort.publishMessage(savedMessage)
     }
 }

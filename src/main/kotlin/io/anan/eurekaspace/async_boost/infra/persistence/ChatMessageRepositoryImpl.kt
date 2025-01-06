@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository
 class ChatMessageRepositoryImpl(
     private val chatMessageMongoRepository: ChatMessageMongoRepository
 ): ChatMessageRepository {
-    override fun save(message: ChatMessage): ChatMessage = chatMessageMongoRepository.save(message)
-
+    override suspend fun save(message: ChatMessage): ChatMessage = chatMessageMongoRepository.insert(message)
 }
