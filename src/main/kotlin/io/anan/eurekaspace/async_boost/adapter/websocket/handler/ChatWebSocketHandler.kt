@@ -1,31 +1,39 @@
 package io.anan.eurekaspace.async_boost.adapter.websocket.handler
 
+import io.anan.eurekaspace.async_boost.domain.model.ChatMessage
+import io.anan.eurekaspace.async_boost.infra.messaging.ChatKafkaConsumer
+import io.anan.eurekaspace.async_boost.infra.messaging.ChatKafkaProducer
+import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.socket.WebSocketHandler
 import org.springframework.web.reactive.socket.WebSocketSession
 import reactor.core.publisher.Mono
-import reactor.core.publisher.Sinks
-import java.util.concurrent.ConcurrentHashMap
 
 @Component
-class ChatWebSocketHandler : WebSocketHandler {
-
-    private val roomMap = ConcurrentHashMap<String, Sinks.Many<String>>()
-
+class ChatWebSocketHandler(
+        private val chatKafkaProducer: ChatKafkaProducer,
+        private val chatKafkaConsumer: ChatKafkaConsumer
+) : WebSocketHandler {
     override fun handle(session: WebSocketSession): Mono<Void> {
         val roomId = session.handshakeInfo.uri.path.split("/").last()
-        val roomSink = roomMap.computeIfAbsent(roomId) { Sinks.many().multicast().onBackpressureBuffer() }
 
+        // 클라이언트 → Kafka로 메시지 전송
         val input = session.receive()
                 .map { it.payloadAsText }
                 .doOnNext { message ->
-                    println("Room [$roomId] Received: $message")
-                    roomSink.tryEmitNext(message)
+                    val chatMessage = ChatMessage(
+                            roomId = roomId,
+                            sender = "user",
+                            message = message
+                    )
+                    runBlocking {
+                        chatKafkaProducer.publishMessage(chatMessage)
+                    }
                 }
 
-        val output = roomSink.asFlux()
+        // Kafka → 클라이언트로 메시지 전송
+        val output = chatKafkaConsumer.getSink(roomId).asFlux()
                 .map(session::textMessage)
-                .doOnNext { println("Room [$roomId] Sent: ${it.payload}") }
 
         return session.send(output).and(input.then())
     }
