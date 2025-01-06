@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
 @Document
-data class ChatMessageModel(
+data class ChatMessage(
         val id: String? = null,
         val roomId: String,
         val sender: String,
