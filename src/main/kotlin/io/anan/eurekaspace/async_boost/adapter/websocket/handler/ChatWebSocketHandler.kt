@@ -1,6 +1,6 @@
 package io.anan.eurekaspace.async_boost.adapter.websocket.handler
 
-import io.anan.eurekaspace.async_boost.application.port.usecase.SendChatMessageUseCase
+import io.anan.eurekaspace.async_boost.application.usecase.SendChatMessageUseCase
 import io.anan.eurekaspace.async_boost.domain.model.ChatMessage
 import io.anan.eurekaspace.async_boost.infra.messaging.ChatKafkaConsumer
 import kotlinx.coroutines.runBlocking
@@ -23,8 +23,8 @@ class ChatWebSocketHandler(
                 .doOnNext { message ->
                     val chatMessage = ChatMessage(
                             roomId = roomId,
-                            sender = "user",
-                            message = message
+                            senderId = "user_001",
+                            content = message
                     )
                     runBlocking {
                         sendChatMessageUseCase.execute(chatMessage)

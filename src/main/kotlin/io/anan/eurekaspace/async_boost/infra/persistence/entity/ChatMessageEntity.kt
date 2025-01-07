@@ -1,8 +1,10 @@
-package io.anan.eurekaspace.async_boost.domain.model
+package io.anan.eurekaspace.async_boost.infra.persistence.entity
 
+import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
-data class ChatMessage(
+@Document("chat_messages")
+data class ChatMessageEntity(
         val id: String? = null,
         val roomId: String,
         val senderId: String,

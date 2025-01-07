@@ -1,4 +1,4 @@
-package io.anan.eurekaspace.async_boost.config
+package io.anan.eurekaspace.async_boost.infra.config
 
 import io.anan.eurekaspace.async_boost.adapter.websocket.handler.ChatWebSocketHandler
 import io.anan.eurekaspace.async_boost.adapter.websocket.handler.GlobalChatWebSocketHandler

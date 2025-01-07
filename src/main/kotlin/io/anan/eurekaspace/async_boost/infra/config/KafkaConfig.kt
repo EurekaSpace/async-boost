@@ -1,4 +1,4 @@
-package io.anan.eurekaspace.async_boost.config
+package io.anan.eurekaspace.async_boost.infra.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
