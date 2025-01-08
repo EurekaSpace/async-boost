@@ -8,12 +8,17 @@ import reactor.core.publisher.Sinks
 
 @Component
 class ChatKafkaConsumer {
-
     // 채팅방별 메시지 브로드캐스트 관리
     private val roomSinkMap = mutableMapOf<String, Sinks.Many<String>>()
 
-    fun getSink(roomId: String): Sinks.Many<String> =
-            roomSinkMap.computeIfAbsent(roomId) { Sinks.many().multicast().onBackpressureBuffer() }
+    fun getSink(roomId: String): Sinks.Many<String> = roomSinkMap.compute(roomId) { _, existingSink ->
+        if (existingSink == null || existingSink.currentSubscriberCount() == 0) {
+            // 새로운 Sink 생성
+            Sinks.many().multicast().onBackpressureBuffer(10000)
+        } else {
+            existingSink
+        }
+    }!!
 
     @KafkaListener(topicPattern = "chat-*", groupId = "chat-group")
     suspend fun listen(record: ConsumerRecord<String, String>, ack: Acknowledgment) {
