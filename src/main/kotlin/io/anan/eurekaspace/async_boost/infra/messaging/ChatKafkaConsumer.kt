@@ -4,6 +4,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import reactor.core.publisher.Sinks
 
 @Component
@@ -18,7 +20,7 @@ class ChatKafkaConsumer {
         } else {
             existingSink
         }
-    }!!
+    } ?: Sinks.many().multicast().onBackpressureBuffer(10000)
 
     @KafkaListener(topicPattern = "chat-*", groupId = "chat-group")
     suspend fun listen(record: ConsumerRecord<String, String>, ack: Acknowledgment) {
