@@ -25,8 +25,8 @@ spring:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      retries: 3
-      batch-size: 0 # 즉시 전송
+      retries: 1
+      batch-size: 50
     listener:
       ack-mode: manual
       concurrency: 3 # 병렬 처리 가능

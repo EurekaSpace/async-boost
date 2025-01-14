@@ -18,4 +18,10 @@ class SendChatMessageUseCase(
         log.info("saved message >>>  $savedMessage")
         chatMessageMQPort.publishMessage(savedMessage)
     }
+
+    suspend fun executeWithoudKafka(message: ChatMessage): ChatMessage {
+        val savedMessage = chatRepository.saveMessage(message)
+        log.info("saved message >>>  $savedMessage")
+        return savedMessage
+    }
 }
