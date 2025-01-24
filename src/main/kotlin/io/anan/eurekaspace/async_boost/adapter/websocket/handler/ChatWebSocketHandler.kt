@@ -12,12 +12,20 @@ import reactor.core.publisher.Sinks
 class ChatWebSocketHandler(
         private val objectMapper: ObjectMapper
 ): WebSocketHandler {
+    private val roomSinkMap = mutableMapOf<String, Sinks.Many<String>>()
 
-    // Sink를 사용해 메시지 스트림 생성 (ReplaySink로 모든 구독자에게 메시지 브로드캐스트)
-    private val sink = Sinks.many().multicast().onBackpressureBuffer<String>(10000)
+    fun getSink(roomId: String): Sinks.Many<String> = roomSinkMap.compute(roomId) { _, existingSink ->
+        if (existingSink == null || existingSink.currentSubscriberCount() == 0) {
+            // 새로운 Sink 생성
+            Sinks.many().multicast().onBackpressureBuffer(10000)
+        } else {
+            existingSink
+        }
+    } ?: Sinks.many().multicast().onBackpressureBuffer(10000)
 
     override fun handle(session: WebSocketSession): Mono<Void> {
         val roomId = session.handshakeInfo.uri.path.split("/").last()
+        val sink = getSink(roomId)
 
         // 클라이언트 → Sink로 메시지 전송
         val input = session.receive()
